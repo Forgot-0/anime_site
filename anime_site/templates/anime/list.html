@@ -1,0 +1,112 @@
+{% for anime in animes %}
+<div class="col-md px-1 py-0">
+
+    <a href="{% url 'anime_detail' anime.slug %}" class="btn btn-outline-dark p-0 w-100">
+        <div class='p-0 z-1'>
+            <img src="{{anime.image.url}}"
+                class="card-img" alt="...">
+            <!-- width="250px" height="350px" -->
+            <div class="card-body text-bg-dark">
+                <h5 class="card-title">
+                    {{ anime.title }}
+                </h5>
+                <p class="card-text text-start p-0">{% for tag in anime.genres.all %}{{ tag.name }},    {% endfor%}
+                </p>
+            </div>
+        </div>
+    </a>
+    <button class="btn btn-outline-dark p-0 text-secondary text-end p-0" data-bs-toggle="modal"
+        data-bs-target="#{{ anime.slug }}">Подробнее</button>
+
+
+
+</div>
+
+<div class="modal fade" id="{{anime.slug }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-bg-dark">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ anime.title }}</h1>
+
+            </div>
+            <div class="modal-body">
+                <div id="{{anime.slug }}1" class="carousel carousel-dark slide">
+
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="{{anime.background.url}}" class="d-block w-100" alt="...">
+                        </div>
+                        {% for picture in anime.imgs.all %}
+
+
+                        <div class="carousel-item">
+                            <img src="{{ picture.img.url }}" class="d-block w-100" alt="...">
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#{{anime.slug }}1"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#{{anime.slug }}1"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="text-bg-dark">{{ anime.description }}</div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark p-0 justify-content-end favorite"
+                    onclick="favorite('{{anime.slug}}', '/reaction/')"><img
+                        src="https://cdn-icons-png.flaticon.com/512/25/25667.png" width="25px" height="100%"></button>
+
+                <button type="button" class="btn btn-outline-dark p-0 justify-content-end"
+                    onclick="favorite('{{anime.slug}}', '/unreaction/')"><img
+                        src="https://cdn-icons-png.flaticon.com/512/2088/2088617.png" width="25px"
+                        height="100%"></button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const favorite = async (slug, action, reaction='like') => {
+        // Формируем запрос
+        const url = await 'http://127.0.0.1:8000/api/v1/animes/' + slug + '/dcomment/'
+        const response = await fetch(url, {
+            // Метод, если не указывать, будет использоваться GET
+            method: 'POST',
+            // Заголовок запроса
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+
+            body: JSON.stringify({'content': 'ddfgdfg', 'pk': 2 })
+        })
+    }
+
+
+</script>
+<!-- <div class="modal-footer">
+    {% if user.is_authenticated %}
+
+    <button type="button" class="btn btn-outline-dark p-0 justify-content-end favorite"
+        onclick="favorite('{{anime.slug}}', '/reaction/')"><img
+            src="https://cdn-icons-png.flaticon.com/512/25/25667.png" width="25px" height="100%"></button>
+
+    <button type="button" class="btn btn-outline-dark p-0 justify-content-end"
+        onclick="favorite('{{anime.slug}}', '/unreaction/')"><img
+            src="https://cdn-icons-png.flaticon.com/512/2088/2088617.png" width="25px"
+            height="100%"></button>
+
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div> -->
+{% endfor %}

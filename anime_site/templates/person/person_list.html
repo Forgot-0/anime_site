@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+
+
+
+{% block content %}
+
+<div class="container py-5 justify-content-center">
+    <div class="row row-cols-md-5 g-4 py-5">
+        {% include "anime/list.html" with animes=persons %}
+    </div>
+    {% if is_paginated %}
+    <div class="pagination justify-content-center">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-dark" href="/anime?page={{ page_obj.previous_page_number }}">previous</a>
+            {% else %}
+            <a class="btn btn-dark disable">previous</a>
+            {% endif %}
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+            <a class="btn btn-dark" href="/anime?page={{ page_obj.next_page_number }}">next</a>
+            {% else %}
+            <a class="btn btn-dark disable">next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

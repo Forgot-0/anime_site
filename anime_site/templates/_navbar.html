@@ -1,0 +1,51 @@
+<header data-bs-theme="dark">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" data-bs-theme="dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent2"
+        aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" aria-current="page" href="#">
+              <h5>Home</h5>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'anime_list' %}" class="nav-link" aria-current="page" href="#">
+              <h5>Anime</h5>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'person_list' %}">
+              <h5>Персонажи</h5>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'random_anime' %}">
+              <h5>Рандомное аниме</h5>
+            </a>
+          </li>
+
+        </ul>
+        <form class="d-flex" role="search" method="GET" action="{% url 'anime_list' %}">
+          <input name="q" class="form-control me-2 text-bg-dark" type="search" placeholder="Search" aria-label="Search">
+        </form>
+        <p></p>
+        {% if user.is_authenticated %}
+        <div class="dropdown text-end dropstart">
+
+          <a href="#">
+            <img src="{% if user.avatarka %} {{user.avatarka.url}} {% else %} https://github.com/mdo.png {% endif %}"
+              alt="mdo" width="32" height="32" class="rounded-circle"></a>
+          <a class="btn btn-outline-secondary" href="{% url 'logout1' %}">Logout</a></li>
+        </div>
+        {% else %}
+        <a href="{% url 'login1' %}" class="btn btn-outline-light me-2">Login</a>
+        {% endif %}
+
+      </div>
+    </div>
+  </nav>
+</header>

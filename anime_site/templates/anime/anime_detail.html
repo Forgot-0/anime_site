@@ -1,0 +1,54 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+
+<main class="container py-5">
+    <div class="container py-5">
+        <div class="mb-3 text-bg-dark border-color-0">
+            <div class="row">
+                <div class="col-md-auto">
+                    <img src="{{ anime.image.url }}"
+                        width="250" height="350">
+                </div>
+                <div class="col">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ anime.title }}</h1>
+                        <br>
+                            <p class="card-text">{% if anime.years.all.count == 1 %}Год выпуска: {% else %}Года выпуска: {% endif %}
+                                {% for year in anime.years.all %}{{ year.name }}{% endfor %}
+                            </p>
+                        <p class="card-text">Жанры: {% for genre in anime.genres.all %} {{ genre.name }},{% endfor%}</p>
+                        <p class="card-text">Темы: {% for topic in anime.topics.all %} {{ topic.name }},{% endfor%}</p>
+                        <p class="card-text"><h5>{{ anime.description }}</h5></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        {% for season in anime.seasons.all %}
+        <div class="container text-center">
+            <h3>{{ season.title }}</h3>
+        </div>
+        <br>
+        <div class="container text-center">
+            <div class="row row-cols-auto">
+                {% for episode in season.episodes.all %}
+                <div class="col p-1">
+                    <a class="btn btn-outline-secondary btn-lg"
+                        href="{% url 'episode_detail' anime.slug season.slug %}?episode={{forloop.counter}}">
+                        {{forloop.counter}} серия</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <hr class="featurette-divider">
+
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}

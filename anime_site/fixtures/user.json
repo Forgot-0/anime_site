@@ -1,0 +1,22 @@
+[
+    {
+        "model": "users.CustomUser",
+        "pk": 1,
+        "fields": {
+            "is_superuser": 1,
+            "username": "Karl",
+            "password": "12345678",
+            "email": "welcome2038@gmail.com"
+        }
+    },
+    {
+        "model": "users.CustomUser",
+        "pk": 2,
+        "fields": {
+            "is_superuser": 1,
+            "username": "Forgot",
+            "password": "12345678",
+            "email": "mr.aisamutdin@mail.ru"
+        }
+    }
+]

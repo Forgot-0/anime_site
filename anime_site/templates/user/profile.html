@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="container justify-content-md-center py-5">
+        <div class="row">
+
+            <div class="col-md-auto justify-content-center">
+                <a href="{% url 'profile_update' %}" class="btn btn-dark rounded-circle">
+                    {% if user.avatarka %}
+                    <img src="{{ user.avatarka.url }}" class="bd-placeholder-img rounded-circle" width="140"
+                        height="140" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice"
+                        focusable="false">
+                    {% else %}
+                    <img src="https://gen.jut.su/uploads/animethumbs/anime_shingeki-no-kyojin.jpg"
+                        class="bd-placeholder-img rounded-circle" width="240" height="240" role="img"
+                        aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    {% endif %}
+                    <div class="text-center">{{ user.username }}</div>
+                </a>
+                <br>
+
+            </div>
+            <div class="col">
+
+                <nav>
+                    <div class="nav nav-tabs mb-2" id="nav-tab" role="tablist">
+                        <button class="btn btn-dark active" id="favorites-tab" data-bs-toggle="tab"
+                            data-bs-target="#favorites" type="button" role="tab" aria-controls="favorites"
+                            aria-selected="true">Избранное</button>
+                        <button class="btn btn-dark" id="later-tab" data-bs-toggle="tab" data-bs-target="#later"
+                            type="button" role="tab" aria-controls="later" aria-selected="false" tabindex="-1">Смотреть
+                            позже</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade active show" id="favorites" role="tabpanel"
+                        aria-labelledby="favorites-tab">
+                        {% if favorites %}
+                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                            {% include "anime/list.html" with animes=favorites %}
+                        </div>
+                        {% else %}
+                        <h1>Вы еще ничего не добавили в избранное</h1>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="later" role="tabpanel" aria-labelledby="later-tab">
+                        {% if laters %}
+                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                            {% include "anime/list.html" with animes=laters %}
+                        </div>
+                        {% else %}
+                        <h1>Вы еще ничего не добавили в смотреть позже</h1>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

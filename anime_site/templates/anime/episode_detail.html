@@ -1,0 +1,69 @@
+{% extends '_base.html' %}
+
+
+{% block content %}
+<div class="container py-5">
+    <div class="container py-5">
+        <div>
+            <select id="quality-selector">
+                <option value="360">360</option>
+                <option value="480">480</option>
+                <option value='720' selected>720</option>
+                <option value="1080">1080</option>
+            </select>
+        </div>
+        <div class="justify-content-md-center">
+            <div class="container">
+
+                <img src="{{ anime.image.url }}"
+                    class="bd-placeholder-img rounded-circle" width="84px" height="84px" role="img"
+                    aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <h1 class="text-center">{{ episode.title }}</h1>
+                
+                <hr class="featurette-divider">
+                
+                <video controls preload="metadata" poster="{{ episode.poster.url }}" width="100%" height="100%">
+
+                    {% for video in episode.video.all %}
+                    <source type="video/mp4" src="{% url 'stream' 'video' video.pk %}">
+                    {% endfor %}
+
+                </video>
+            </div>
+        </div>
+
+
+        <div class="row pagination">
+
+            <div class="col-4 text-start">
+                {% if page_obj.has_previous %}
+                <a class="btn btn-dark" href="?episode={{ page_obj.previous_page_number }}">
+                    <h5><-{{page_obj.number|add:-1}} серия</h5>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-4 text-center">
+                <a class="btn btn-dark" href="{% url 'anime_detail' anime_slug %}">
+                    <h5>Список всех сериий</h5>
+                </a>
+            </div>
+            <div class="col-4 text-end">
+                {% if page_obj.has_next %}
+                <a class="btn btn-dark" href="?episode={{ page_obj.next_page_number }}">
+                    <h5>{{ page_obj.number|add:1 }} серия -></h5>
+                </a>
+
+                {% elif season.next %}
+                <a class="btn btn-dark" href="{% url 'episode_detail' anime.slug episode.season.next.slug  %}">
+                    <h5>{{season.next.title}}-></h5>
+                </a>
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
