@@ -27,3 +27,5 @@ class CommentMixin:
             'view': self
         })
         return Response(serializer.data)
+    
+    

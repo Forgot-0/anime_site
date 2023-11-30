@@ -23,6 +23,9 @@ class UserReaction(models.Model):
     object_pk = models.SlugField()
     content_object = GenericForeignKey('content_type', 'object_pk')
 
+    def __str__(self) -> str:
+        return f'{self.user} {self.reaction}: {self.content_object}'
+
 
 class TotalReaction(models.Model):
     name = models.ForeignKey('Reaction', on_delete=models.CASCADE)
@@ -39,7 +42,7 @@ class TotalReaction(models.Model):
 
 class Reactions(models.Model):
     reactions = GenericRelation(UserReaction, object_id_field='object_pk')
-    total = GenericRelation(TotalReaction, object_id_field='object_pk')
+    total_reacs = GenericRelation(TotalReaction, object_id_field='object_pk')
 
     class Meta:
         abstract = True

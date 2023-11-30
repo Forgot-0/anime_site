@@ -1,9 +1,8 @@
 from rest_framework import serializers
 from reactions.api.mixins import ReactionMixinSerializer
-from animes.models import Anime, Season, Episode, Tag
+from animes.models import Anime, Season, Episode, Tag, Year
 from files.api.serializers import VideoListDetailSerializer
 from comments.api.serializers import ComentSerializer
-
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -18,8 +17,8 @@ class AnimeSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
     topics_pk = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), source='topics', write_only=True, many=True)
     years_pk = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), source='years', write_only=True, many=True)
-
+        queryset=Year.objects.all(), source='years', write_only=True, many=True)
+    
     class Meta:
         model = Anime
         fields = (
@@ -34,7 +33,7 @@ class AnimeSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
             'topics_pk',
             'years',
             'years_pk',
-            'is_react',
+            'is_react'
             )
         depth = 1
 

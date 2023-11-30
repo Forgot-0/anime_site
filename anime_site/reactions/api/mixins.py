@@ -4,10 +4,11 @@ from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from reactions import services
 from .serializers import UserReactionSerializer, TotalReactionSerializer
+from reactions.models import TotalReaction
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Max
 
-
-
-class ReactiondMixin:
+class ReactionMixin:
     @action(methods=['POST'], detail=True)
     def reaction(self, request, pk=None):
         obj = self.get_object()
@@ -36,12 +37,30 @@ class ReactiondMixin:
     
     @action(methods=['GET'], detail=False)
     def get_favs(self, request):
-        queryset = (self.queryset.filter(reactions__reaction__slug=request.data.get('reaction', 'like'), reactions__user=request.user))
-        data = self.get_serializer_class()(queryset, many=True, context={
-            'request': self.request,
-            'format': self.format_kwarg,
-            'view': self,
-        }).data
+        queryset = (self.filter_queryset(self.get_queryset()).\
+                    filter(reactions__reaction__slug=request.data.get('reaction', 'like'), 
+                           reactions__user=request.user))
+
+        return self.get_list(queryset)
+
+    @action(methods=['GET'], detail=False)
+    def order_by_popular(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        queryset = (queryset.filter(total_reacs__name=
+                            request.data.get('reaction', 'like')).annotate(total_reactions=
+                            Max('total_reacs__total')).order_by('-total_reactions'))
+
+        return self.get_list(queryset)
+
+    def get_list(self, queryset):
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        data = self.get_serializer(queryset, many=True).data
+
         return Response(data)
 
 
@@ -72,4 +91,4 @@ class FavoriteMixinSerializer(serializers.Serializer):
     favorite = serializers.SerializerMethodField()
 
     def get_favorite(self, obj):
-        return services.total_react(obj, reaction_slug='favorite').values('total')
+        return services.total_react(obj, reaction_slug='favorite').values('total')  

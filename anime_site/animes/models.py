@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
-from reactions.models import UserReaction
 from files.models import Video, Picture
 from reactions.models import Reactions
 # from stream_videos.models import Video
@@ -31,7 +30,7 @@ class Anime(Reactions):
     genres = models.ManyToManyField('Tag', related_name='genre')
     topics = models.ManyToManyField('Tag', related_name='topic')
 
-    years = models.ManyToManyField('Tag', related_name='year')
+    years = models.ManyToManyField('Year')
 
     background = models.FileField(upload_to=anime_background_path)
 
@@ -40,10 +39,6 @@ class Anime(Reactions):
     def __str__(self) -> str:
         return self.slug
     
-    class Meta:
-        ordering = ['-total__total']
-
-
 
 class Season(models.Model):
     title = models.CharField(max_length=40)
@@ -77,3 +72,11 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+
+class Year(models.Model):
+    slug = models.SlugField(unique=True, primary_key=True)
+    name = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self) -> str:
+        return str(self.name)

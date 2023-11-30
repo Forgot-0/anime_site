@@ -1,11 +1,11 @@
 from rest_framework.fields import empty
 from comments.models import Comment
 from rest_framework import serializers
-from reactions.api.mixins import ReactionMixinSerializer, LikeDislikeMixinSerializer
+from reactions.api.mixins import ReactionMixinSerializer
 
 
-class ComentSerializer(serializers.ModelSerializer, ReactionMixinSerializer, LikeDislikeMixinSerializer):
-    
+class ComentSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
+
     class Meta:
         model = Comment
         fields = (
@@ -15,9 +15,7 @@ class ComentSerializer(serializers.ModelSerializer, ReactionMixinSerializer, Lik
             'content',
             'date_create',
             'date_update',
-            'is_react',
-            'like',
-            'dislike',
+            'is_react'
         )
     
     

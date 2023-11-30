@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from animes.models import Anime, Season, Episode, Tag
 from .serializers import AnimeDetailSerializer, AnimeSerializer, SeasonSerializer, TagSerializer, EpisodeSerializer
-from reactions.api.mixins import ReactiondMixin
+from reactions.api.mixins import ReactionMixin
 from files.api.mixins import FileMixin
 from comments.api.mixins import CommentMixin
 from mixins.viewsets import CustomModelViewSet
@@ -10,7 +10,7 @@ from rest_framework.permissions import DjangoModelPermissions
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class AnimeViewSet(CommentMixin, ReactiondMixin, CustomModelViewSet):
+class AnimeViewSet(CommentMixin, ReactionMixin, CustomModelViewSet):
     queryset = Anime.objects.prefetch_related('genres', 'topics', 'years').all()
     # permission_classes = (DjangoModelPermissions,)
     filter_backends = (DjangoFilterBackend, )

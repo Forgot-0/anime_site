@@ -3,11 +3,12 @@ from persons.models import Person
 from reactions.api.mixins import ReactionMixinSerializer
 from files.api.serializers import PictureListDetailSerializer, AudioDetailSerializer
 from animes.models import Anime
+from reactions.api.serializers import ReactionsSerializerList
 
 class PersonSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
     imgs = PictureListDetailSerializer(many=True, read_only=True)
     anime_pk = serializers.PrimaryKeyRelatedField(queryset=Anime.objects.all(), source='anime', write_only=True)
-
+    
     class Meta:
         model = Person
         fields = (

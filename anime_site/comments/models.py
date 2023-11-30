@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from reactions.models import Reactions
@@ -39,3 +39,11 @@ class TotalComments(models.Model):
 
     def __str__(self) -> str:
         return f"{self.content_type} {self.object_pk}-{self.total}"
+    
+
+class Comments(models.Model):
+    comments = GenericRelation(Comment, object_id_field='object_pk')
+    total_comments = GenericRelation(TotalComments, object_id_field='object_pk')
+
+    class Meta:
+        abstract = True
