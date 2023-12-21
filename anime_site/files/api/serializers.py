@@ -24,7 +24,7 @@ class VideoListDetailSerializer(serializers.ModelSerializer):
 class PictureListDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
-        fields = ('img')
+        fields = ('img', )
 
 
 class AudioDetailSerializer(serializers.ModelSerializer):

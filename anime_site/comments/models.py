@@ -23,11 +23,15 @@ class Comment(Reactions):
     date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
-    # language = models.CharField(max_length=6, blank=True)
+    language = models.ForeignKey('Languege', on_delete=models.PROTECT, blank=True, null=True)
 
-    def __str__(self) -> str:
-        return f"{self.content_type} {self.object_pk} user: {self.user}"
+    # def __str__(self) -> str:
+    #     return f"{self.content_type} {self.object_pk} user: {self.user}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_pk"]),
+        ]
 
 
 class TotalComments(models.Model):
@@ -37,9 +41,17 @@ class TotalComments(models.Model):
 
     total = models.PositiveBigIntegerField(default=0)
 
-    def __str__(self) -> str:
-        return f"{self.content_type} {self.object_pk}-{self.total}"
+    # def __str__(self) -> str:
+    #     return f"{self.content_type} {self.object_pk}-{self.total}"
     
+
+class Languege(models.Model):
+    name = models.CharField(max_length=30)
+    slug = models.SlugField(primary_key=True, unique=True)
+
+    def __str__(self) -> str:
+        return str(self.slug)
+
 
 class Comments(models.Model):
     comments = GenericRelation(Comment, object_id_field='object_pk')

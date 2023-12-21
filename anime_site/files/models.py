@@ -40,6 +40,11 @@ class Video(models.Model):
 
     def __str__(self) -> str:
         return f'{self.content_type}-{self.res}'
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_pk"]),
+        ]
 
 
 class Audio(models.Model):
@@ -49,6 +54,11 @@ class Audio(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_pk = models.SlugField()
     content_object = GenericForeignKey('content_type', 'object_pk')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_pk"]),
+        ]
 
 
 class VoiceActing(models.Model):
@@ -64,3 +74,8 @@ class Picture(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_pk = models.SlugField()
     content_object = GenericForeignKey('content_type', 'object_pk')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_pk"]),
+        ]

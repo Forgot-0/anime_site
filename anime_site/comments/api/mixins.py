@@ -13,19 +13,30 @@ class CommentMixin:
 
     @action(methods=['POST'], detail=True)
     def dcomment(self, request, pk=None):
-        obj = self.get_object() 
         services.delete_comment(request.data['pk'])
         return Response()
 
     @action(methods=['GET'], detail=True)
     def comments(self, request, pk=None):
         obj = self.get_object()
-        data = services.comments(obj)
-        serializer = ComentSerializer(data, many=True, context={
+        language = (request.META['HTTP_ACCEPT_LANGUAGE'].split(',')[0])
+        data = services.comments(obj, language)
+        return self.get_list_comment(data)
+
+    def get_commentserializer(self, data, many=False):
+        serializer = ComentSerializer(data, many=many, context={
             'request': self.request,
             'format': self.format_kwarg,
             'view': self
         })
-        return Response(serializer.data)
-    
-    
+        return serializer
+
+    def get_list_comment(self, queryset):
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_commentserializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        data = self.get_commentserializer(queryset, many=True).data
+
+        return Response(data)

@@ -25,6 +25,11 @@ class UserReaction(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user} {self.reaction}: {self.content_object}'
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_pk"]),
+        ]
 
 
 class TotalReaction(models.Model):

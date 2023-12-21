@@ -28,6 +28,6 @@ def delete_comment(pk):
         data.delete()
 
 
-def comments(obj):
+def comments(obj, language):
     obj_type = ContentType.objects.get_for_model(obj)
     return Comment.objects.filter(content_type=obj_type, object_pk=obj.pk)

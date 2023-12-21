@@ -36,20 +36,6 @@ class AnimeSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
             'is_react'
             )
         depth = 1
-
-
-class EpisodeSerializer(serializers.ModelSerializer):
-    video = VideoListDetailSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Episode
-        fields = (
-            'title',
-            'nomer',
-            'poster',
-            'season',
-            'video',
-            )
         
 
 class SeasonSerializer(serializers.ModelSerializer):
@@ -69,6 +55,20 @@ class SeasonDetailSerializer(serializers.ModelSerializer):
             'count_series', 
             'episodes'
         )
+
+
+
+class EpisodeSerializer(serializers.ModelSerializer):
+    video = VideoListDetailSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Episode
+        fields = (
+            'title',
+            'nomer',
+            'poster',
+            'video',
+            )
 
 
 class AnimeDetailSerializer(ReactionMixinSerializer, serializers.ModelSerializer):

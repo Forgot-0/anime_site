@@ -4,9 +4,11 @@ from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from reactions import services
 from .serializers import UserReactionSerializer, TotalReactionSerializer
-from reactions.models import TotalReaction
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Max
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 
 class ReactionMixin:
     @action(methods=['POST'], detail=True)
@@ -43,6 +45,7 @@ class ReactionMixin:
 
         return self.get_list(queryset)
 
+    
     @action(methods=['GET'], detail=False)
     def order_by_popular(self, request):
         queryset = self.filter_queryset(self.get_queryset())

@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from files.api.mixins import FileMixin
 from animes.models import Anime, Season, Episode, Tag
 from .serializers import AnimeDetailSerializer, AnimeSerializer, SeasonSerializer, TagSerializer, EpisodeSerializer
 from reactions.api.mixins import ReactionMixin
@@ -8,9 +8,13 @@ from mixins.viewsets import CustomModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import DjangoModelPermissions
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 
-class AnimeViewSet(CommentMixin, ReactionMixin, CustomModelViewSet):
+
+class AnimeViewSet(CommentMixin, ReactionMixin, CustomModelViewSet, FileMixin):
     queryset = Anime.objects.prefetch_related('genres', 'topics', 'years').all()
     # permission_classes = (DjangoModelPermissions,)
     filter_backends = (DjangoFilterBackend, )
@@ -35,6 +39,7 @@ class EpisodeViewSet(CustomModelViewSet, FileMixin):
     
     def list(self, request, *args, **kwargs):
         return Response({"list": "Method \"GET\" not allowed."})
+
 
 
 class TagViewSet(CustomModelViewSet):

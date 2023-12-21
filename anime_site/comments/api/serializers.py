@@ -13,9 +13,10 @@ class ComentSerializer(ReactionMixinSerializer, serializers.ModelSerializer):
             'user',
             'reference',
             'content',
+            'language',
             'date_create',
             'date_update',
-            'is_react'
+            'is_react',
         )
     
     

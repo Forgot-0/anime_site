@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 from .viewsets import *
 
 
-router = DefaultRouter()
-router.register(r'reactions', 0)
+# router = DefaultRouter()
+# router.register(r'reactions', )
 
-urlpatterns = router.urls
+# urlpatterns = router.urls
