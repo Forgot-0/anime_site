@@ -5,9 +5,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from reactions import services
 from .serializers import UserReactionSerializer, TotalReactionSerializer
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Max
+from django.db.models import Max, Q, Avg
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+
 
 
 class ReactionMixin:
@@ -48,13 +49,22 @@ class ReactionMixin:
     
     @action(methods=['GET'], detail=False)
     def order_by_popular(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        queryset = (queryset.filter(total_reacs__name=
-                            request.data.get('reaction', 'like')).annotate(total_reactions=
-                            Max('total_reacs__total')).order_by('-total_reactions'))
+        queryset = self.filter_queryset(self.get_queryset()).annotate(total_reactions=
+                            Max('total_reacs__total', 
+                                filter=Q(total_reacs__name__slug=request.data.get('reaction', 'like')))).order_by('-total_reactions')
 
         return self.get_list(queryset)
+
+
+    # @action(methods=['GET'], detail=False)
+    # def get_rating(self, request):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    
+    #     queryset = queryset.annotate(rate = 
+    #         Max("total_reacs__total", filter=Q(total_reacs__name__slug='like'))/Max("total_reacs__total", filter=Q(total_reacs__name__slug='dislike'))
+    #     )
+    #     print(queryset.values('rate'))
+    #     return self.get_list(queryset)
 
     def get_list(self, queryset):
         page = self.paginate_queryset(queryset)
@@ -65,6 +75,7 @@ class ReactionMixin:
         data = self.get_serializer(queryset, many=True).data
 
         return Response(data)
+    
 
 
 class ReactionMixinSerializer(serializers.Serializer):
@@ -73,6 +84,7 @@ class ReactionMixinSerializer(serializers.Serializer):
 
     def get_is_react(self, obj):
         user = self.context.get('request').user
+        # return(obj.reactions.filter(user=user).values_list('reaction', flat=True))
         return services.is_react(obj, user)
     
     def get_total_react(self, obj):
@@ -95,3 +107,12 @@ class FavoriteMixinSerializer(serializers.Serializer):
 
     def get_favorite(self, obj):
         return services.total_react(obj, reaction_slug='favorite').values('total')  
+    
+
+# class RatingMixinSerializer(serializers.Serializer):
+#     rate = serializers.SerializerMethodField()
+
+#     def get_rate(self, obj):
+#         count_like = 
+#         count_dislike = 
+#         return 

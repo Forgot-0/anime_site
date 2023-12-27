@@ -8,14 +8,11 @@ from mixins.viewsets import CustomModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import DjangoModelPermissions
 from django_filters.rest_framework import DjangoFilterBackend
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 
 
 
 class AnimeViewSet(CommentMixin, ReactionMixin, CustomModelViewSet, FileMixin):
-    queryset = Anime.objects.prefetch_related('genres', 'topics', 'years').all()
+    queryset = Anime.objects.prefetch_related('genres', 'topics', 'years',).all()
     # permission_classes = (DjangoModelPermissions,)
     filter_backends = (DjangoFilterBackend, )
     filterset_fields = ('genres', 'topics', 'years')

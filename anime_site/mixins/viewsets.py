@@ -21,7 +21,7 @@ class CustomModelViewSet(RetrieveModelMixin, ModelViewSet):
         
         response = super().list(request, *args, **kwargs)
 
-        cache.set(cache_key, response.data, timeout=60*3) 
+        cache.set(cache_key, response.data, timeout=2) 
         return response
     
     def retrieve(self, request, *args, **kwargs):

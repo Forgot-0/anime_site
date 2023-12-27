@@ -19,6 +19,7 @@ def episode_poster_path(instance, filename):
 
 
 # Create your models here.
+
 class Anime(Reactions):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True, primary_key=True)

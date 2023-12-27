@@ -1,0 +1,25 @@
+
+services:
+  django:
+    image: python:3.9
+    volumes:
+      - ./django_app:/anime_site
+    working_dir: /anime_site
+    command: bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - elasticsearch
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.11.3"
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
